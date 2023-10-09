@@ -1,0 +1,18 @@
+
+jdbc:
+  db-name:
+
+spring:
+  datasource:
+    mall:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.0.36:3306/jkmall_dev?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&connectTimeout=15000&socketTimeout=60000&serverTimezone=Asia/Shanghai
+      username: jkmall_dev
+      password: 123456
+      db-name: jkmall_dev
+    ces:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://192.168.0.36:3306/jkcore_dev?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&connectTimeout=15000&socketTimeout=60000&serverTimezone=Asia/Shanghai
+      username: jkcore_dev
+      password: 123456
+      db-name: jkcore_dev
