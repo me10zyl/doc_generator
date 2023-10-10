@@ -55,7 +55,7 @@ public class WeixinDOCConverter implements Converter{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 
-        //printContents(clipboard);
+//        printContents(clipboard);
 
 
         clipboard.setContents(new MyTransferable(

@@ -78,14 +78,16 @@ public class DbConverter {
             if(column.isIdx()) {
                 List<Map<String, String>> indexs = indexInfo.stream().filter(e -> e.get("COLUMN_NAME").equals(column.getColumnName())).collect(Collectors.toList());
                 for (Map<String, String> indexMap : indexs) {
+                    String indexName = indexMap.get("INDEX_NAME");
+                    long count = indexInfo.stream().filter(e -> e.get("INDEX_NAME").equals(indexName)).count();
                     String idxString = column.getIdxString();
                     if(idxString != null){
                         idxString += ",";
-                    }else{
+                    }else {
                         idxString = "";
                     }
                     column.setIdxString(idxString + (("false".equals(indexMap.get("NON_UNIQUE")) ? "unq" : "idx") +
-                            (indexs.size() > 1 ? "(" + indexMap.get("INDEX_NAME") + ")" : "")));
+                            (count > 1 ? "(" + indexName + ")" : "")));
                 }
             }
             return column;
