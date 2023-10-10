@@ -64,6 +64,7 @@ public class DbConverter {
             Column column = new Column();
             column.setColumnName(m.get("COLUMN_NAME"));
             column.setType(m.get("TYPE_NAME"));
+            column.setDecimalDigits(m.get("DECIMAL_DIGITS") == null ? null : Integer.parseInt(m.get("DECIMAL_DIGITS")));
             column.setColumnSize(Integer.parseInt(m.get("COLUMN_SIZE")));
             column.setNotNull(m.get("NULLABLE").equals("0"));
             column.setDefaultValue(m.get("COLUMN_DEF"));
@@ -74,6 +75,19 @@ public class DbConverter {
             column.setIdx(indexInfo.stream().anyMatch(e->{
                 return !"PRIMARY".equals(e.get("INDEX_NAME")) && e.get("COLUMN_NAME").equals(column.getColumnName());
             }));
+            if(column.isIdx()) {
+                List<Map<String, String>> indexs = indexInfo.stream().filter(e -> e.get("COLUMN_NAME").equals(column.getColumnName())).collect(Collectors.toList());
+                for (Map<String, String> indexMap : indexs) {
+                    String idxString = column.getIdxString();
+                    if(idxString != null){
+                        idxString += ",";
+                    }else{
+                        idxString = "";
+                    }
+                    column.setIdxString(idxString + (("false".equals(indexMap.get("NON_UNIQUE")) ? "unq" : "idx") +
+                            (indexs.size() > 1 ? "(" + indexMap.get("INDEX_NAME") + ")" : "")));
+                }
+            }
             return column;
         }).collect(Collectors.toList());
     }

@@ -38,10 +38,10 @@ public class WeixinDOCConverter implements Converter{
         for (Column column : table.getColumnList()) {
             sb.append("<tr>");
             sb.append(td(column.getColumnName()));
-            sb.append(td(column.getType().toLowerCase() + "(" + column.getColumnSize() + ")"));
+            sb.append(td(column.getFullTypeString()));
             sb.append(td(column.getDefaultValue() == null ? "" : column.getDefaultValue()));
             sb.append(td(column.isNotNull() ? "是" : "否"));
-            sb.append(td(column.isPk() ? "primary" : ( column.isIdx() ? "idx" : "")));
+            sb.append(td(column.isPk() ? "primary" : ( column.isIdx() ? column.getIdxString() : "")));
             sb.append(td(column.isPk() ? "主键" : column.getRemarks()));
             sb.append("</tr>");
         }
@@ -66,11 +66,7 @@ public class WeixinDOCConverter implements Converter{
                                 .replaceFirst("\\[\\[\\[\\]\\]\\]", sb.toString())
                 }
                 , flavors), null);
-       // Transferable p = new MyTransferable(data,flavors);
-       /* return table.getColumnList().stream().map(c->{
-            String line = StrUtil.format("{} {} {} {} {} {}", c.getColumnName(), c.getType(), c.getDefaultValue() == null ? "" : c.getDefaultValue(), c.isNotNull() ? "是" : "否", c.isPk() ? "primary" : "idx", c.isPk() ? "主键" : c.getRemarks() );
-            return line;
-        }).collect(Collectors.joining("\r\n"));*/
+
         return null;
     }
 
