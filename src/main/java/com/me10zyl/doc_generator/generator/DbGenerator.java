@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class DbConverter {
+public class DbGenerator {
 
     private final DatasourceUtils datasourceUtils;
 

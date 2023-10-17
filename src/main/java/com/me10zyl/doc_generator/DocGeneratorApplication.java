@@ -2,7 +2,7 @@ package com.me10zyl.doc_generator;
 
 import com.me10zyl.doc_generator.entity.DB;
 import com.me10zyl.doc_generator.entity.Table;
-import com.me10zyl.doc_generator.generator.DbConverter;
+import com.me10zyl.doc_generator.generator.DbGenerator;
 import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class DocGeneratorApplication implements CommandLineRunner {
 
     @Autowired
-    private DbConverter dbConverter;
+    private DbGenerator dbGenerator;
     @Autowired
     private WeixinDOCConverter weixinDOCConverter;
 
@@ -29,7 +29,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Table table = dbConverter.convertTable(DB.DB_MALL, "eq_aftersale_refund_product_pay");
+        Table table = dbGenerator.convertTable(DB.DB_MALL, "eq_aftersale_refund_product_pay");
         System.out.println("<------------------------>");
         String convert = weixinDOCConverter.convert(table);
         System.out.println(convert);
