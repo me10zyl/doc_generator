@@ -34,10 +34,11 @@ public class DbConverter {
         }
         Table table;
         try(Connection connection = db.getDataSource().getConnection()) {
+            connection.setReadOnly(true);
             DatabaseMetaData metaData = connection.getMetaData();
             String catalog = connection.getCatalog();
-            ResultSet tables = metaData.getTables(catalog, db.getJdbcProperties().getDbName(), tableName, null);
-            List<Map<String, String>> maps = printMetadata(tables, false);
+            ResultSet tables = metaData.getTables(catalog, db.getJdbcProperties().getDbName(), tableName, new String[]{"TABLE"});
+            List<Map<String, String>> maps = printMetadata(tables, true);
             table = buildTable(maps, metaData, catalog);
             table.print();
         }

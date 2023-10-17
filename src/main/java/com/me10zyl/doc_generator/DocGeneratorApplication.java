@@ -29,7 +29,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Table table = dbConverter.convertTable(DB.DB_MALL, "eq_integral_grant_record");
+        Table table = dbConverter.convertTable(DB.DB_MALL, "eq_aftersale_refund_product_pay");
         System.out.println("<------------------------>");
         String convert = weixinDOCConverter.convert(table);
         System.out.println(convert);
