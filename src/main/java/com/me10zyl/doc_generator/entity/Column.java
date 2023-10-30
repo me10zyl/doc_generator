@@ -10,6 +10,7 @@ public class Column {
     private final String[] showSizeTypes = {"VARCHAR", "DECIMAL"};
     private String columnName;
     private String type;
+    private String typeString;
     private int columnSize;
     private Integer decimalDigits;
     private boolean pk;

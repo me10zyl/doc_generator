@@ -3,6 +3,7 @@ package com.me10zyl.doc_generator;
 import com.me10zyl.doc_generator.entity.DB;
 import com.me10zyl.doc_generator.entity.Table;
 import com.me10zyl.doc_generator.generator.DbGenerator;
+import com.me10zyl.doc_generator.generator.WeixinDocGenerator;
 import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,19 +20,30 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private DbGenerator dbGenerator;
     @Autowired
     private WeixinDOCConverter weixinDOCConverter;
+    @Autowired
+    private WeixinDocGenerator weixinDocGenerator;
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(DocGeneratorApplication.class);
         springApplication.setWebApplicationType(WebApplicationType.NONE);
         springApplication.run(args);
-        //SpringApplication.run(DocGeneratorApplication.class, args);
+    }
+
+    private void convertDB(String tableName){
+        Table table = dbGenerator.convertTable(DB.DB_MALL, tableName);
+        System.out.println("<------------------------>");
+        String convert = weixinDOCConverter.convert(table);
+        System.out.println(convert);
+    }
+
+    private void convertWeixinDoc(){
+        Table table = weixinDocGenerator.convertTable();
+        table.print();
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Table table = dbGenerator.convertTable(DB.DB_MALL, "eq_aftersale_refund_product_pay");
-        System.out.println("<------------------------>");
-        String convert = weixinDOCConverter.convert(table);
-        System.out.println(convert);
+        //convertDB("eq_aftersale_refund_product_pay");
+        convertWeixinDoc();
     }
 }
