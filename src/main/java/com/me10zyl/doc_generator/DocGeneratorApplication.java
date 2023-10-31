@@ -6,6 +6,7 @@ import com.me10zyl.doc_generator.entity.api.Api;
 import com.me10zyl.doc_generator.generator.ApiDocGenerator;
 import com.me10zyl.doc_generator.generator.DbGenerator;
 import com.me10zyl.doc_generator.generator.WeixinDocGenerator;
+import com.me10zyl.doc_generator.generator.converter.MDConverter;
 import com.me10zyl.doc_generator.generator.converter.SQLConverter;
 import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
 import com.me10zyl.doc_generator.generator.converter2.WeixinDocConverter2;
@@ -34,6 +35,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private WeixinDocConverter2 weixinDocConverter2;
     @Autowired
     private SQLConverter sqlConverter;
+    @Autowired
+    private MDConverter mdConverter;
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(DocGeneratorApplication.class);
@@ -41,11 +44,15 @@ public class DocGeneratorApplication implements CommandLineRunner {
         springApplication.run(args);
     }
 
-    private void convertDB(String tableName){
+    private void convertDB(String tableName, int type){
         Table table = dbGenerator.convertTable(DB.DB_MALL, tableName);
         System.out.println("<------------------------>");
-        String convert = weixinDOCConverter.convert(table);
-        System.out.println(convert);
+        if(type == 0) {
+            weixinDOCConverter.convert(table);
+        }else{
+            String convert = mdConverter.convert(table);
+            System.out.println(convert);
+        }
     }
 
     private void convertWeixinDoc(){
@@ -68,8 +75,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //convertDB("eq_aftersale_refund_product_pay");
-        convertWeixinDoc();
-        //convertApi("/api/mustBuyReach/search");
+        convertDB("eq_refund_account", 1);
+//        convertWeixinDoc();
+//        convertApi("/api/mustBuyReach/search");
     }
 }
