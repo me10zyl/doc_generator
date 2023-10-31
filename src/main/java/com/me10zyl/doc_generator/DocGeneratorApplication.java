@@ -6,6 +6,7 @@ import com.me10zyl.doc_generator.entity.api.Api;
 import com.me10zyl.doc_generator.generator.ApiDocGenerator;
 import com.me10zyl.doc_generator.generator.DbGenerator;
 import com.me10zyl.doc_generator.generator.WeixinDocGenerator;
+import com.me10zyl.doc_generator.generator.converter.SQLConverter;
 import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
 import com.me10zyl.doc_generator.generator.converter2.WeixinDocConverter2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private ApiDocGenerator apiDocGenerator;
     @Autowired
     private WeixinDocConverter2 weixinDocConverter2;
+    @Autowired
+    private SQLConverter sqlConverter;
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(DocGeneratorApplication.class);
@@ -47,10 +50,11 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     private void convertWeixinDoc(){
         Table table = weixinDocGenerator.convertTable();
-        table.print();
+        String convert = sqlConverter.convert(table);
+        System.out.println(convert);
     }
 
-    private void convertApi(String... paths){
+    private void convertApi(String paths){
         List<Api> apis = apiDocGenerator.buildFromSwagger(paths);
         int i = 0;
         for (Api api : apis) {
@@ -65,7 +69,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         //convertDB("eq_aftersale_refund_product_pay");
-        //convertWeixinDoc();
-        convertApi("/api/mustBuyReach/search");
+        convertWeixinDoc();
+        //convertApi("/api/mustBuyReach/search");
     }
 }

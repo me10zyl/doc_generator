@@ -41,13 +41,17 @@ public class WeixinDocGenerator {
         Elements tables = document.getElementsByTag("table");
         Elements trs = tables.get(0).getElementsByTag("tr");
         List<Column> columnList = new ArrayList<>();
+        int i = 0;
         for (Element tr : trs) {
+            if(i++ == 0){
+                continue;
+            }
             Elements tds = tr.getElementsByTag("td");
             Column c = new Column();
             c.setColumnName(tds.get(0).text());
             c.setTypeString(tds.get(1).text());
-            c.setPk("primary".equalsIgnoreCase(tds.get(0).text()));
-            c.setNotNull("是".equals(tds.get(2).text()));
+            c.setPk("primary".equalsIgnoreCase(tds.get(4).text()) || "PK".equals(tds.get(4).text()));
+            c.setNotNull("是".equals(tds.get(3).text()));
             c.setIdx(!c.isPk() ? StrUtil.isNotBlank(tds.get(4).text()) : false);
             c.setDefaultValue(tds.get(2).text());
             c.setRemarks(tds.get(5).text());
