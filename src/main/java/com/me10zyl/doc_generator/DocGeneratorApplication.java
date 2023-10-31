@@ -7,6 +7,7 @@ import com.me10zyl.doc_generator.generator.ApiDocGenerator;
 import com.me10zyl.doc_generator.generator.DbGenerator;
 import com.me10zyl.doc_generator.generator.WeixinDocGenerator;
 import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
+import com.me10zyl.doc_generator.generator.converter2.WeixinDocConverter2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,6 +29,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private WeixinDocGenerator weixinDocGenerator;
     @Autowired
     private ApiDocGenerator apiDocGenerator;
+    @Autowired
+    private WeixinDocConverter2 weixinDocConverter2;
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(DocGeneratorApplication.class);
@@ -56,12 +59,13 @@ public class DocGeneratorApplication implements CommandLineRunner {
                 System.out.println("=============");
             }
         }
+        weixinDocConverter2.convert(apis);
     }
 
     @Override
     public void run(String... args) throws Exception {
         //convertDB("eq_aftersale_refund_product_pay");
         //convertWeixinDoc();
-        convertApi("/api/integralGrantRecord/list");
+        convertApi("/api/mustBuyReach/search");
     }
 }

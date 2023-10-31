@@ -56,36 +56,48 @@ public class ApiDocGenerator {
                 String in = jsonObject1.getString("in");
                 parameter.setIn(in);
                 if (in.equals("body")) {
-                    return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null);
+                    return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null, null, null);
                 }
                 return Stream.of(parameter);
             }).collect(Collectors.toList()));
-            api.setResponses(parseSchema(html, ((JSONObject)getJson(jsonObject3, "responses.200.schema")).toJSONString(), null, null, null).collect(Collectors.toList()));
+            api.setResponses(parseSchema(html, ((JSONObject)getJson(jsonObject3, "responses.200.schema")).toJSONString(), null, null, null, null,null )
+                            .sorted((a,b)->{
+                                return a.getName().compareTo(b.getName());
+                            })
+                    .collect(Collectors.toList()));
             return api;
         }).collect(Collectors.toList());
     }
 
-    private static Stream<Parameter> parseSchema(Html html, String schema, String name, com.alibaba.fastjson.JSONArray requireFields, String parentName) {
+    private static Stream<Parameter> parseSchema(Html html, String schema, String name, com.alibaba.fastjson.JSONArray requireFields, String parentType, String parentDesc, String parentName) {
         JSONObject jsonObject = JSONObject.parseObject(schema);
-//        String parentName1 = parentName == null ? "": (parentName + "." + name);
-//        System.out.println(parentName1);
         if (jsonObject.containsKey("$ref")) {
             String ref = jsonObject.getString("$ref");
-            return parseSchema(html, new JSONObject(JsonPath.read(html.get(), getJsonPathFromRef(ref))).toJSONString(), name, null, null);
+            return parseSchema(html, new JSONObject(JsonPath.read(html.get(), getJsonPathFromRef(ref))).toJSONString(), name, requireFields, parentType, parentDesc, parentName);
         } else if(jsonObject.getString("type").equals("array")){
-            String ref =  ((String)getJson(jsonObject, "items.$ref"));
-            return parseSchema(html, new JSONObject(JsonPath.read(html.get(), getJsonPathFromRef(ref))).toJSONString(), name, null, null);
+            return parseSchema(html, jsonObject.getJSONObject("items").toJSONString(), name, requireFields, jsonObject.getString("type"), jsonObject.getString("description"), name);
         } else if(jsonObject.getString("type").equals("object")) {
             JSONObject properties = jsonObject.getJSONObject("properties");
             com.alibaba.fastjson.JSONArray requiredArray = jsonObject.getJSONArray("required");
             return properties.keySet().stream().flatMap(k->{
-               return parseSchema(html, properties.getJSONObject(k).toJSONString(), k, requiredArray, name);
+               return parseSchema(html, properties.getJSONObject(k).toJSONString(), k, requiredArray, parentType, parentDesc, parentName);
             });
         }else{
             Parameter parameter1 = new Parameter();
             parameter1.setName(name);
             parameter1.setType(jsonObject.getString("type"));
             parameter1.setDescription(jsonObject.getString("description"));
+            if("array".equals(parentType)){
+                if(parameter1.getType()  ==null) {
+                    parameter1.setType(parentType);
+                }
+                if(parameter1.getDescription() == null) {
+                    parameter1.setDescription(parentDesc);
+                }
+                if(!name.equals(parentName)) {
+                    parameter1.setName(parentName + "[]." + name);
+                }
+            }
             parameter1.setRequired(requireFields == null ? false : requireFields.contains(parameter1.getName()));
             parameter1.setIn("body");
             return Stream.of(parameter1);

@@ -1,0 +1,50 @@
+<html>
+<head>
+    <style>
+        .b{
+            font-weight: bold;
+            text-align: center;
+            vertical-align: center;
+            font-size: 15px;
+            color: #333333;
+        }
+        td{
+            line-height: 23px;
+        }
+        .c{
+            padding-left: 10px;
+            color: #333333;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+<!--StartFragment-->
+<h3>
+    {tag}
+</h3>
+<div style="padding-left: 0">
+    接口
+</div>
+<table>
+    <tbody>
+    <tr>
+        <td class="b" width="120px">接口</td>
+        <td colspan="4" class="c">{path}</td>
+    </tr>
+    <tr>
+        <td class="b">方法</td>
+        <td colspan="4" class="c">{method}</td>
+    </tr>
+    <tr>
+        <td class="b">输入/输出</td>
+        <td width="120px" class="c">字段名称</td>
+        <td width="120px" class="c">类型</td>
+        <td width="120px" class="c">是否必传</td>
+        <td width="120px" class="c">说明</td>
+    </tr>
+    {trs}
+    </tbody>
+</table>
+</body>
+</html>
