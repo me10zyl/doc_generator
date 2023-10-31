@@ -16,3 +16,8 @@ spring:
       username: jkcore_dev
       password: 123456
       db-name: jkcore_dev
+
+swagger:
+  url: "http://192.168.0.133:18888/v2/api-docs?group=%E5%89%8D%E7%AB%AF%E6%8E%A5%E5%8F%A3"
+  username: admin
+  password: admin123456
