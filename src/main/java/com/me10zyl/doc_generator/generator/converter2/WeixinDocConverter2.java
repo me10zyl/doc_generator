@@ -86,10 +86,14 @@ public class WeixinDocConverter2 implements Convert2{
                     map.put("description", "");
                 }
             }
-            if((Boolean)map.get("required")){
-                map.put("requiredString", "是");
-            }else{
-                map.put("requiredString", "否");
+            if(type.equals("输出")){
+                map.put("requiredString", "");
+            }else {
+                if ((Boolean) map.get("required")) {
+                    map.put("requiredString", "是");
+                } else {
+                    map.put("requiredString", "否");
+                }
             }
             format += StrUtil.format("<td class='c'>{name}</td><td class='c'>{type}</td><td class='c'>{requiredString}</td><td class='c'>{description}</td></tr>", map);
             return format;

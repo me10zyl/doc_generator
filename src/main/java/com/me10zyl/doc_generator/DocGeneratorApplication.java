@@ -75,8 +75,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        convertDB("eq_refund_account", 1);
-//        convertWeixinDoc();
-//        convertApi("/api/mustBuyReach/search");
+//        convertDB("eq_refund_account", 1);
+       // convertWeixinDoc();
+        convertApi("/order/info/closeReason/list");
     }
 }

@@ -94,7 +94,7 @@ public class ApiDocGenerator {
                 if(parameter1.getDescription() == null) {
                     parameter1.setDescription(parentDesc);
                 }
-                if(!name.equals(parentName)) {
+                if(!name.equals(parentName) && parentName != null) {
                     parameter1.setName(parentName + "[]." + name);
                 }
             }

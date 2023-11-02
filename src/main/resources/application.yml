@@ -18,6 +18,6 @@ spring:
       db-name: jkcore_dev
 
 swagger:
-  url: "http://192.168.0.133:18888/v2/api-docs?group=%E5%89%8D%E7%AB%AF%E6%8E%A5%E5%8F%A3"
+  url: "http://192.168.0.133:8092/v2/api-docs?group=%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%8E%A5%E5%8F%A3"
   username: admin
   password: admin123456
