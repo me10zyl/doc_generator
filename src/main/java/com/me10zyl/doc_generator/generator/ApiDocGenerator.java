@@ -64,6 +64,7 @@ public class ApiDocGenerator {
                             .sorted((a,b)->{
                                 return a.getName().compareTo(b.getName());
                             })
+                    .distinct()
                     .collect(Collectors.toList()));
             return api;
         }).collect(Collectors.toList());

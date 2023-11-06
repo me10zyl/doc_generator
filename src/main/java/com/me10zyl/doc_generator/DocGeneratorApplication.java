@@ -77,6 +77,6 @@ public class DocGeneratorApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 //        convertDB("eq_refund_account", 1);
        // convertWeixinDoc();
-        convertApi("/order/info/closeReason/list");
+        convertApi("/group-buy/order/dg-order/list");
     }
 }
