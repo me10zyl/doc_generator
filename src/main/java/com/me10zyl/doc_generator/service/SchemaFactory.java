@@ -27,6 +27,8 @@ public class SchemaFactory {
                 parseSchema(allJson, ((JSONObject) property.getValue()).toJSONString(), schemaVisitor, copyedNodes);
             }
         } else if ("array".equals(schema.getType())) {
+            Node lastNode = nodes.get(nodes.size() - 1);
+            nodes.add(new Node(lastNode.getName(), schema.getType(), lastNode.isRequired()));
             ArraySchema arraySchema = JSONObject.parseObject(schemaJson, ArraySchema.class);
             parseSchema(allJson, arraySchema.getItems().toJSONString(), schemaVisitor, nodes);
         } else {
