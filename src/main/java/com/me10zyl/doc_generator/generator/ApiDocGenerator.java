@@ -46,20 +46,22 @@ public class ApiDocGenerator {
             api.setMethod(jsonObject.keySet().iterator().next());
             JSONObject jsonObject3 = jsonObject.getJSONObject(api.getMethod());
             com.alibaba.fastjson.JSONArray paras = jsonObject3.getJSONArray("parameters");
-            api.setParameters(paras.stream().flatMap(para -> {
-                JSONObject jsonObject1 = (JSONObject) para;
-                Parameter parameter = new Parameter();
-                parameter.setName(jsonObject1.getString("name"));
-                parameter.setDescription(jsonObject1.getString("description"));
-                parameter.setRequired(jsonObject1.getBoolean("required"));
-                parameter.setType(jsonObject1.getString("type"));
-                String in = jsonObject1.getString("in");
-                parameter.setIn(in);
-                if (in.equals("body")) {
-                    return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null, null, null);
-                }
-                return Stream.of(parameter);
-            }).collect(Collectors.toList()));
+            if(paras != null) {
+                api.setParameters(paras.stream().flatMap(para -> {
+                    JSONObject jsonObject1 = (JSONObject) para;
+                    Parameter parameter = new Parameter();
+                    parameter.setName(jsonObject1.getString("name"));
+                    parameter.setDescription(jsonObject1.getString("description"));
+                    parameter.setRequired(jsonObject1.getBoolean("required"));
+                    parameter.setType(jsonObject1.getString("type"));
+                    String in = jsonObject1.getString("in");
+                    parameter.setIn(in);
+                    if (in.equals("body")) {
+                        return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null, null, null);
+                    }
+                    return Stream.of(parameter);
+                }).collect(Collectors.toList()));
+            }
             api.setResponses(parseSchema(html, ((JSONObject)getJson(jsonObject3, "responses.200.schema")).toJSONString(), null, null, null, null,null )
                             .sorted((a,b)->{
                                 return a.getName().compareTo(b.getName());
