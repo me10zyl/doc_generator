@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MDConverter implements Converter{
     @Override
-    public String convert(Table table) {
+    public String convert(Table[] tables) {
+        Table table = tables[0];
         StringBuilder sb = new StringBuilder();
         sb.append(StrUtil.format("### {}[{}]\n", table.getRemarks(), table.getTableName()));
         sb.append("| 字段名               | 类型          |      默认值       | 为空  |   约束   | 描述             |\n");

@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 @Component
 public class SQLConverter implements Converter{
     @Override
-    public String convert(Table table) {
+    public String convert(Table[] tables) {
         Map<String, String> map = new HashMap<>();
         map.put("comment", "<comment>");
-        map.put("columnString", convertColumnString(table));
+        map.put("columnString", convertColumnString(tables[0]));
         map.put("tableName", "<table_name>");
         String format = StrUtil.format("create table {tableName}\n(\n{columnString}\n)\ncomment {comment};"
                 , map);

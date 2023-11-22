@@ -1,8 +1,6 @@
 package com.me10zyl.doc_generator.generator.converter;
 
 import cn.hutool.core.util.StrUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.rtf.RtfWriter2;
 import com.me10zyl.doc_generator.entity.Column;
 import com.me10zyl.doc_generator.entity.Table;
 import lombok.SneakyThrows;
@@ -27,31 +25,39 @@ public class WeixinDOCConverter implements Converter{
 
     @Override
     @SneakyThrows
-    public String convert(Table table) {
+    public String convert(Table[] tables) {
 //        FileOutputStream fos = new FileOutputStream(new File("c:\\data\\rtf\\my.rtf"));
 //        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //        Document document = new Document();
 //        RtfWriter2 rtfWriter2 = RtfWriter2.getInstance(document, baos);
 //        document.open();
 //        com.lowagie.text.Table table1 = new com.lowagie.text.Table(6, table.getColumnList().size());
-        StringBuilder sb = new StringBuilder();
-        for (Column column : table.getColumnList()) {
-            sb.append("<tr>");
-            sb.append(td(column.getColumnName()));
-            sb.append(td(column.getFullTypeString()));
-            sb.append(td(column.getDefaultValue() == null ? "" : column.getDefaultValue()));
-            sb.append(td(column.isNotNull() ? "是" : "否"));
-            sb.append(td(column.isPk() ? "primary" : ( column.isIdx() ? column.getIdxString() : "")));
-            sb.append(td(column.isPk() ? "主键" : column.getRemarks()));
-            sb.append("</tr>");
-        }
+        StringBuilder htmlString = new StringBuilder();
+        for (Table table : tables) {
+            StringBuilder sb = new StringBuilder();
+            for (Column column : table.getColumnList()) {
+                sb.append("<tr>");
+                sb.append(td(column.getColumnName()));
+                sb.append(td(column.getFullTypeString()));
+                sb.append(td(column.getDefaultValue() == null ? "" : column.getDefaultValue()));
+                sb.append(td(column.isNotNull() ? "是" : "否"));
+                sb.append(td(column.isPk() ? "primary" : ( column.isIdx() ? column.getIdxString() : "")));
+                sb.append(td(column.isPk() ? "主键" : column.getRemarks()));
+                sb.append("</tr>");
+            }
 //        document.add(table1);
 //        document.close();
 //        rtfWriter2.close();
-        String stringFormat = table.getColumnList().stream().map(c -> {
-            String line = StrUtil.format("{}\t{}\t{}\t{}\t{}\t{}", c.getColumnName(), c.getType(), c.getDefaultValue() == null ? "" : c.getDefaultValue(), c.isNotNull() ? "是" : "否", c.isPk() ? "primary" : "idx", c.isPk() ? "主键" : c.getRemarks());
-            return line;
-        }).collect(Collectors.joining("\n"));
+            /*String stringFormat = table.getColumnList().stream().map(c -> {
+                String line = StrUtil.format("{}\t{}\t{}\t{}\t{}\t{}", c.getColumnName(), c.getType(), c.getDefaultValue() == null ? "" : c.getDefaultValue(), c.isNotNull() ? "是" : "否", c.isPk() ? "primary" : "idx", c.isPk() ? "主键" : c.getRemarks());
+                return line;
+            }).collect(Collectors.joining("\n"));*/
+
+            htmlString.append(getTableString(table, sb));
+        }
+
+
+
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 
@@ -60,14 +66,18 @@ public class WeixinDOCConverter implements Converter{
 
         clipboard.setContents(new MyTransferable(
                 new Object[]{
-                        stringFormat,
-                        new String(Files.readAllBytes(Paths.get("C:\\Users\\me10z\\OneDrive\\java\\doc_generator\\doc_generator\\src\\main\\resources\\wxdoc.html")))
-                                .replaceFirst("\\[\\[\\[\\]\\]\\]", "【新建表】" + table.getRemarks() +  " " + table.getTableName())
-                                .replaceFirst("\\[\\[\\[\\]\\]\\]", sb.toString())
+                        "abc",
+                        htmlString.toString()
                 }
                 , flavors), null);
 
         return null;
+    }
+
+    private static String getTableString(Table table, StringBuilder sb) throws IOException {
+        return new String(Files.readAllBytes(Paths.get("C:\\Users\\me10z\\OneDrive\\java\\doc_generator\\doc_generator\\src\\main\\resources\\wxdoc.html")))
+                .replaceFirst("\\[\\[\\[\\]\\]\\]", "【新建表】" + table.getRemarks() + " " + table.getTableName())
+                .replaceFirst("\\[\\[\\[\\]\\]\\]", sb.toString());
     }
 
     private String td(String columnName) {

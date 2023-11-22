@@ -18,6 +18,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -45,13 +46,18 @@ public class DocGeneratorApplication implements CommandLineRunner {
         springApplication.run(args);
     }
 
-    private void convertDB(String tableName, ConvertType type){
-        Table table = dbGenerator.convertTable(DB.DB_MALL, tableName);
+    private void convertDB(ConvertType type, String... tableName){
+        List<Table> tables = new ArrayList<>();
+        for (String tName : tableName) {
+            Table table = dbGenerator.convertTable(DB.DB_MALL, tName);
+            tables.add(table);
+        }
+
         System.out.println("<------------------------>");
         if(type == ConvertType.DB_TO_WXDOC) {
-            weixinDOCConverter.convert(table);
+            weixinDOCConverter.convert(tables.toArray(new Table[]{}));
         }else{
-            String convert = mdConverter.convert(table);
+            String convert = mdConverter.convert(tables.toArray(new Table[]{}));
             System.out.println(convert);
         }
     }
@@ -59,7 +65,9 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     private void convertWeixinDocToSQL(){
         Table table = weixinDocGenerator.convertTable();
-        String convert = sqlConverter.convert(table);
+        List<Table> tables = new ArrayList<>();
+        tables.add(table);
+        String convert = sqlConverter.convert(tables.toArray(new Table[]{}));
         System.out.println(convert);
     }
 
@@ -77,7 +85,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        convertDB("eq_refund_account", ConvertType.DB_TO_WXDOC);
+        convertDB(ConvertType.DB_TO_WXDOC, "eq_refund_account", "eq_refund_product");
 //        convertWeixinDocToSQL();
 //        convertApi("/api/login/permissions", "/api/role/list");
     }
