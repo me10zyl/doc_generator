@@ -4,9 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.me10zyl.doc_generator.entity.api.Api;
 import com.me10zyl.doc_generator.entity.api.Parameter;
-import com.me10zyl.doc_generator.generator.converter.WeixinDOCConverter;
 import lombok.SneakyThrows;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -47,28 +45,36 @@ public class WeixinDocConverter2 implements Convert2{
         String html = new String(Files.readAllBytes(Paths.get("C:\\Users\\me10z\\OneDrive\\java\\doc_generator\\doc_generator\\src\\main\\resources\\weixindoc_api.html")));
         StringBuilder newHtml = new StringBuilder();
         for (Api api : apiList) {
-            newHtml.append(convertHtml(html, api));
+            Integer[] width = new Integer[]{120,60,80,120};
+            String template = convertHtml(html, api, width);
+            Map<String, Integer> hashMap = new HashMap<>();
+            hashMap.put("width1", width[0]);
+            hashMap.put("width2", width[1]);
+            hashMap.put("width3", width[2]);
+            hashMap.put("width4", width[3]);
+            String convertHtml = StrUtil.format(template, hashMap);
+            newHtml.append(convertHtml);
         }
         clipboard.setContents(new WeixinDocConverter2.MyTransferable(
                 new Object[]{"abc",newHtml.toString()}
                 , flavors), null);
     }
 
-    private String convertHtml(String html, Api api) {
+    private String convertHtml(String html, Api api, Integer[] width) {
         html = html.replace("{tag}", api.getTag());
         html = html.replace("{path}", api.getPath());
         html = html.replace("{method}", api.getMethod());
-        html = html.replace("{trs}", buildTrs(api));
+        html = html.replace("{trs}", buildTrs(api, width));
         return html;
     }
 
-    private CharSequence buildTrs(Api api) {
-        String s1 = buildPara(api.getParameters(), "输入");
-        String s2 = buildPara(api.getResponses(), "输出");
+    private CharSequence buildTrs(Api api, Integer[] width) {
+        String s1 = buildPara(api.getParameters(), "输入", width);
+        String s2 = buildPara(api.getResponses(), "输出", width);
         return s1 + s2;
     }
 
-    private static String buildPara(List<Parameter> parameters, String type) {
+    private static String buildPara(List<Parameter> parameters, String type, Integer[] width) {
         AtomicInteger atomicInteger = new AtomicInteger();
         return parameters.stream().map(e->{
             Map<String, Object> map = BeanUtil.beanToMap(e);
@@ -97,6 +103,23 @@ public class WeixinDocConverter2 implements Convert2{
                     map.put("requiredString", "否");
                 }
             }
+            int newWidth = (int) Math.floor(e.getName().length() * 7.8);
+            if(newWidth > width[0]){
+                width[0] = newWidth;
+            }
+            int newWidth2 = (int) Math.floor(Optional.ofNullable(e.getDescription()).orElse("").getBytes().length * 5.8);
+            if(newWidth2 > width[3]){
+                width[3] = newWidth2;
+            }
+
+            int newWidth3 = (int) Math.floor(e.getType().length() * 7.8);
+            if(newWidth3 > width[1]){
+                width[1] = newWidth3;
+                if(width[1] > 120){
+                    width[1] = 120;
+                }
+            }
+
             format += StrUtil.format("<td class='c'>{name}</td><td class='c'>{type}</td><td class='c'>{requiredString}</td><td class='c'>{description}</td></tr>", map);
             return format;
         }).filter(Objects::nonNull).collect(Collectors.joining(""));
