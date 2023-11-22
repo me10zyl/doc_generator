@@ -5,12 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.jayway.jsonpath.JsonPath;
 import com.me10zyl.doc_generator.entity.api.Api;
 import com.me10zyl.doc_generator.entity.api.Parameter;
+import com.me10zyl.doc_generator.entity.api.swagger.Node;
 import com.me10zyl.doc_generator.properties.SwaggerProperties;
+import com.me10zyl.doc_generator.service.SchemaFactory;
+import com.me10zyl.doc_generator.service.SchemaVisitor;
 import com.yilnz.surfing.core.SurfHttpRequest;
 import com.yilnz.surfing.core.SurfHttpRequestBuilder;
 import com.yilnz.surfing.core.SurfSpider;
 import com.yilnz.surfing.core.basic.Html;
 import com.yilnz.surfing.core.basic.Page;
+import lombok.Getter;
 import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +28,52 @@ public class ApiDocGenerator {
 
     @Autowired
     private SwaggerProperties swaggerProperties;
+    private MySchemaVisitor schemaVistor = new MySchemaVisitor();
+
+    public static class MySchemaVisitor implements SchemaVisitor{
+
+        @Getter
+        private List<Parameter> parameters = new ArrayList<>();
+        @Override
+        public void visit(List<Node> nodes) {
+            System.out.println(nodes);
+            System.out.println("------");
+            StringBuilder nameBuilder = new StringBuilder();
+            String firstDesc = null;
+            String firstType = null;
+            Boolean required = null;
+            for (int i = 0; i < nodes.size(); i++) {
+                Node node = nodes.get(i);
+                if("properties".equals(node.getType())){
+                    nameBuilder.append(node.getPropertyName());
+                    if(firstDesc == null) {
+                        firstDesc = node.getDesc();
+                    }
+                    if(firstType == null){
+                        firstType = node.getJavaType();
+                    }
+                    if(required == null){
+                        required = node.isRequired();
+                    }
+                    if(i != nodes.size() - 1){
+                        nameBuilder.append(".");
+                    }
+                }else if("array".equals(node.getType())){
+                    nameBuilder.append("[]");
+                    if(i != nodes.size() - 1){
+                        nameBuilder.append(".");
+                    }
+                }
+            }
+            Parameter parameter = new Parameter();
+            parameter.setName(nameBuilder.toString().replaceAll("\\.\\[]", "[]"));
+            parameter.setDescription(firstDesc);
+            parameter.setType(firstType);
+            parameter.setRequired(required != null && required);
+            parameters.add(parameter);
+        }
+    }
+
 
     public List<Api> buildFromSwagger(String... paths) {
         SurfSpider surfSpider = SurfSpider.create();
@@ -34,6 +84,10 @@ public class ApiDocGenerator {
                 ":" + swaggerProperties.getPassword()));
         Page page = surfSpider.addRequest(r).request().get(0);
         Html html = page.getHtml();
+        if(page.getStatusCode() != 200){
+            throw new RuntimeException("连不通：" + swaggerProperties.getUrl());
+        }
+        System.out.println("API路径：" + paths[0]);
         return Arrays.stream(paths).map(path -> {
             Api api = new Api();
             Optional<JSONObject> first = Optional.ofNullable(JSONObject.parseObject(html.get()).getJSONObject("paths").getJSONObject(path));
@@ -57,15 +111,22 @@ public class ApiDocGenerator {
                     String in = jsonObject1.getString("in");
                     parameter.setIn(in);
                     if (in.equals("body")) {
-                        return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null, null, null);
+                        SchemaFactory.parseSchema(html.get(), jsonObject1.getJSONObject("schema").toJSONString(), schemaVistor, new ArrayList<>());
+                        return schemaVistor.parameters.stream();
+                        //return parseSchema(html, jsonObject1.getJSONObject("schema").toJSONString(), jsonObject1.getString("name"), null, null, null, null);
+                        //return schemaVistor
                     }
                     return Stream.of(parameter);
                 }).collect(Collectors.toList()));
             }
-            api.setResponses(parseSchema(html, ((JSONObject)getJson(jsonObject3, "responses.200.schema")).toJSONString(), null, null, null, null,null )
-                            .sorted((a,b)->{
-                                return a.getName().compareTo(b.getName());
-                            })
+            String schemaJson = ((JSONObject) getJson(jsonObject3, "responses.200.schema")).toJSONString();
+            schemaVistor.parameters.clear();
+            SchemaFactory.parseSchema(html.get(), schemaJson, schemaVistor, new ArrayList<>());
+//            parseSchema(html, schemaJson, null, null, null, null,null )
+//                    .sorted((a,b)->{
+//                                return a.getName().compareTo(b.getName());
+//                            });
+            api.setResponses(schemaVistor.parameters.stream()
                     .distinct()
                     .collect(Collectors.toList()));
             return api;

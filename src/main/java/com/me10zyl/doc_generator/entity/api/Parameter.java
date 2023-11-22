@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class Parameter {
-    private String parentName;
+//    private String parentName;
     private String name;
     private boolean required;
     private String type;
