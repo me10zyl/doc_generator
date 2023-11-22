@@ -1,5 +1,6 @@
 package com.me10zyl.doc_generator;
 
+import com.me10zyl.doc_generator.entity.ConvertType;
 import com.me10zyl.doc_generator.entity.DB;
 import com.me10zyl.doc_generator.entity.Table;
 import com.me10zyl.doc_generator.entity.api.Api;
@@ -44,10 +45,10 @@ public class DocGeneratorApplication implements CommandLineRunner {
         springApplication.run(args);
     }
 
-    private void convertDB(String tableName, int type){
+    private void convertDB(String tableName, ConvertType type){
         Table table = dbGenerator.convertTable(DB.DB_MALL, tableName);
         System.out.println("<------------------------>");
-        if(type == 0) {
+        if(type == ConvertType.DB_TO_WXDOC) {
             weixinDOCConverter.convert(table);
         }else{
             String convert = mdConverter.convert(table);
@@ -55,13 +56,14 @@ public class DocGeneratorApplication implements CommandLineRunner {
         }
     }
 
-    private void convertWeixinDoc(){
+
+    private void convertWeixinDocToSQL(){
         Table table = weixinDocGenerator.convertTable();
         String convert = sqlConverter.convert(table);
         System.out.println(convert);
     }
 
-    private void convertApi(String paths){
+    private void convertApi(String... paths){
         List<Api> apis = apiDocGenerator.buildFromSwagger(paths);
         int i = 0;
         for (Api api : apis) {
@@ -75,8 +77,8 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        convertDB("eq_refund_account", 1);
-//        convertWeixinDoc();
-        convertApi("/api/login/permissions");
+//        convertDB("eq_refund_account", ConvertType.DB_TO_WXDOC);
+//        convertWeixinDocToSQL();
+//        convertApi("/api/login/permissions", "/api/role/list");
     }
 }

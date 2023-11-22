@@ -45,14 +45,16 @@ public class WeixinDocConverter2 implements Convert2{
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         //printContents(clipboard);
         String html = new String(Files.readAllBytes(Paths.get("C:\\Users\\me10z\\OneDrive\\java\\doc_generator\\doc_generator\\src\\main\\resources\\weixindoc_api.html")));
-        String newHtml = convertHtml(html, apiList);
+        StringBuilder newHtml = new StringBuilder();
+        for (Api api : apiList) {
+            newHtml.append(convertHtml(html, api));
+        }
         clipboard.setContents(new WeixinDocConverter2.MyTransferable(
-                new Object[]{"abc",newHtml}
+                new Object[]{"abc",newHtml.toString()}
                 , flavors), null);
     }
 
-    private String convertHtml(String html, List<Api> apiList) {
-        Api api = apiList.get(0);
+    private String convertHtml(String html, Api api) {
         html = html.replace("{tag}", api.getTag());
         html = html.replace("{path}", api.getPath());
         html = html.replace("{method}", api.getMethod());
