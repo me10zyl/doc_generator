@@ -59,10 +59,15 @@ public class SchemaFactory {
             parseSchema(allJson, arraySchema.getItems().toJSONString(), schemaVisitor, nodes);
         } else {
             //property
-            Node lastNode = nodes.get(nodes.size() - 1);
             PropertySchema propertySchema = JSONObject.parseObject(schemaJson, PropertySchema.class);
-            lastNode.setDesc(propertySchema.getDescription());
-            lastNode.setJavaType(propertySchema.getType());
+            for (int i = nodes.size() - 1; i >= 0; i--) {
+                Node node = nodes.get(i);
+                if(node.getJavaType() == null && "properties".equals(node.getType())){
+                    node.setDesc(propertySchema.getDescription());
+                    node.setJavaType(propertySchema.getType());
+                    break;
+                }
+            }
             schemaVisitor.visit(nodes);
         }
     }
