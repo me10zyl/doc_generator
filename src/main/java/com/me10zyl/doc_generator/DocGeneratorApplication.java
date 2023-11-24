@@ -49,7 +49,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private void convertDB(ConvertType type, String... tableName){
         List<Table> tables = new ArrayList<>();
         for (String tName : tableName) {
-            Table table = dbGenerator.convertTable(DB.DB_MALL, tName);
+            Table table = dbGenerator.convertTable(DB.DB_MY, tName);
             tables.add(table);
         }
 
@@ -85,8 +85,10 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        convertDB(ConvertType.DB_TO_WXDOC, "eq_refund_account", "eq_refund_product");
+        convertDB(ConvertType.DB_TO_WXDOC, "sys_bank_info", "health_bank_card",
+                "health_id_auth"
+                );
 //        convertWeixinDocToSQL();
-        convertApi("/api/login/permissions", "/api/role/list");
+//        convertApi("/api/login/permissions", "/api/role/list");
     }
 }

@@ -23,6 +23,18 @@ public class DBConf {
     }
 
     @Bean
+    @ConfigurationProperties(prefix="spring.datasource.my")
+    public DataSourceProperties myDataSourceProperties(){
+        return new JDBCProperties();
+    }
+
+
+    @Bean
+    public DataSource myDataSource(){
+        return myDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+
+    @Bean
     public DataSource mallDataSource(){
         return mallDataSourceProperties().initializeDataSourceBuilder().build();
     }

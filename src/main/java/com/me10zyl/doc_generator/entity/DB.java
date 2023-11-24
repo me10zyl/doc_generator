@@ -13,4 +13,5 @@ public class DB {
 
     public static final String DB_MALL = "mall";
     public static final String DB_CES = "ces";
+    public static final String DB_MY = "my";
 }

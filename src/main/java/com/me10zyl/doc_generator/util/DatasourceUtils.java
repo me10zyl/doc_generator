@@ -32,8 +32,13 @@ public class DatasourceUtils {
         DB db2 = new DB();
         db2.setJdbcProperties(jdbcProperties2);
         db2.setDataSource(dataSource2);
-        hashmap.put(DB.DB_MALL, db);
         hashmap.put(DB.DB_CES, db2);
+        DataSource dataSource3 = (DataSource) applicationContext.getBean("myDataSource");
+        JDBCProperties jdbcProperties3 = (JDBCProperties) applicationContext.getBean("myDataSourceProperties");
+        DB db3 = new DB();
+        db3.setJdbcProperties(jdbcProperties3);
+        db3.setDataSource(dataSource3);
+        hashmap.put(DB.DB_MY, db3);
     }
 
     public DB getDB(String qualifierName){

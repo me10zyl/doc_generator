@@ -16,6 +16,12 @@ spring:
       username: jkcore_dev
       password: 123456
       db-name: jkcore_dev
+    my:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/tmp?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&useSSL=false&connectTimeout=15000&socketTimeout=60000&serverTimezone=Asia/Shanghai
+      username: root
+      password: sp&)n1Kjvv02
+      db-name: tmp
 
 swagger:
   url: "http://192.168.0.133:19999/api/v2/api-docs?group=%E5%89%8D%E7%AB%AF%E6%8E%A5%E5%8F%A3"
