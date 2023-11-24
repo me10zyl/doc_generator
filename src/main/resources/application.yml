@@ -24,6 +24,6 @@ spring:
       db-name: tmp
 
 swagger:
-  url: "http://192.168.0.133:19999/api/v2/api-docs?group=%E5%89%8D%E7%AB%AF%E6%8E%A5%E5%8F%A3"
+  url: "http://localhost:8888/v2/api-docs?group=%E5%89%8D%E7%AB%AF%E6%8E%A5%E5%8F%A3"
   username: admin
   password: admin123456

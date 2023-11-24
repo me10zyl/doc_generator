@@ -85,10 +85,23 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        convertDB(ConvertType.DB_TO_WXDOC, "sys_bank_info", "health_bank_card",
-                "health_id_auth"
-                );
+//        convertDB(ConvertType.DB_TO_WXDOC, "sys_bank_info", "health_bank_card",
+//                "health_id_auth"
+//                );
 //        convertWeixinDocToSQL();
-//        convertApi("/api/login/permissions", "/api/role/list");
+        convertApi("/api/health/interface",
+                "/api/health/userInfo",
+                "/api/health/listHealthMoney",
+                "/api/health/healthMoneyRecords",
+                "/api/health/applyReimbursement",
+                "/api/health/listReimbursement",
+                "/api/health/queryReimbursement",
+                "/api/health/uploadReimbursementFile",
+                "/api/idAuth/saveIdAuth",
+                "/api/bankCard/bankInfo",
+                "/api/bankCard/listBankCard",
+                "/api/bankCard/saveOrUpdateBankCard",
+                "/api/bankCard/deleteBankCard"
+        );
     }
 }

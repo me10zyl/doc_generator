@@ -87,6 +87,7 @@ public class ApiDocGenerator {
         if(page.getStatusCode() != 200){
             throw new RuntimeException("连不通：" + swaggerProperties.getUrl());
         }
+        System.out.println("SWAGGER-JSON:" + html.get());
         System.out.println("API路径：" + paths[0]);
         return Arrays.stream(paths).map(path -> {
             Api api = new Api();
@@ -119,9 +120,12 @@ public class ApiDocGenerator {
                     return Stream.of(parameter);
                 }).collect(Collectors.toList()));
             }
-            String schemaJson = ((JSONObject) getJson(jsonObject3, "responses.200.schema")).toJSONString();
             schemaVistor.parameters.clear();
-            SchemaFactory.parseSchema(html.get(), schemaJson, schemaVistor, new ArrayList<>());
+            JSONObject json = (JSONObject) getJson(jsonObject3, "responses.200.schema");
+            if(json != null) {
+                String schemaJson = json.toJSONString();
+                SchemaFactory.parseSchema(html.get(), schemaJson, schemaVistor, new ArrayList<>());
+            }
 //            parseSchema(html, schemaJson, null, null, null, null,null )
 //                    .sorted((a,b)->{
 //                                return a.getName().compareTo(b.getName());
