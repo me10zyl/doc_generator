@@ -9,8 +9,10 @@ import java.util.List;
 @Data
 public class Api {
     private String tag;
+    private String summary;
     private String path;
     private String method;
+    private String description;
     private List<Parameter> parameters = new ArrayList<>();
     private List<Parameter> responses = new ArrayList<>();
 

@@ -47,11 +47,12 @@ public class WeixinDocConverter2 implements Convert2{
         for (Api api : apiList) {
             Integer[] width = new Integer[]{120,60,80,120};
             String template = convertHtml(html, api, width);
-            Map<String, Integer> hashMap = new HashMap<>();
+            Map<String, Object> hashMap = new HashMap<>();
             hashMap.put("width1", width[0]);
             hashMap.put("width2", width[1]);
             hashMap.put("width3", width[2]);
             hashMap.put("width4", width[3]);
+            hashMap.put("notes", api.getDescription().replace("\n", "<br/>"));
             String convertHtml = StrUtil.format(template, hashMap);
             newHtml.append(convertHtml);
         }
@@ -61,7 +62,7 @@ public class WeixinDocConverter2 implements Convert2{
     }
 
     private String convertHtml(String html, Api api, Integer[] width) {
-        html = html.replace("{tag}", api.getTag());
+        html = html.replace("{tag}", api.getSummary());
         html = html.replace("{path}", api.getPath());
         html = html.replace("{method}", api.getMethod());
         html = html.replace("{trs}", buildTrs(api, width));

@@ -98,6 +98,9 @@ public class ApiDocGenerator {
             JSONObject jsonObject = first.get();
             api.setPath(path);
             api.setTag(((JSONArray) JsonPath.read(jsonObject.toJSONString(), "$.*.tags[0]")).get(0).toString());
+            api.setSummary(((JSONArray) JsonPath.read(jsonObject.toJSONString(), "$.*.summary")).get(0).toString());
+            JSONArray array = (JSONArray) JsonPath.read(jsonObject.toJSONString(), "$.*.description");
+            api.setDescription((array == null || array.isEmpty()) ? "" : array.get(0).toString());
             api.setMethod(jsonObject.keySet().iterator().next());
             JSONObject jsonObject3 = jsonObject.getJSONObject(api.getMethod());
             com.alibaba.fastjson.JSONArray paras = jsonObject3.getJSONArray("parameters");
