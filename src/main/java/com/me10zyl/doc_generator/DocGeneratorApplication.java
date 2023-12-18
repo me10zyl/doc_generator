@@ -89,7 +89,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
 //                "health_id_auth"
 //                );
 //        convertWeixinDocToSQL();
-        convertApi("/api/health/interface",
+     /*   convertApi("/api/health/interface",
                 "/api/health/userInfo",
                 "/api/health/listHealthMoney",
                 "/api/health/healthMoneyRecords",
@@ -102,6 +102,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
                 "/api/bankCard/listBankCard",
                 "/api/bankCard/saveOrUpdateBankCard",
                 "/api/bankCard/deleteBankCard"
-        );
+        );*/
+        convertApi("/api/health/leaveMsg");
     }
 }

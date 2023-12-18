@@ -66,11 +66,13 @@ public class ApiDocGenerator {
                 }
             }
             Parameter parameter = new Parameter();
-            parameter.setName(nameBuilder.toString().replaceAll("\\.\\[]", "[]"));
+            parameter.setName(nameBuilder.toString().replaceAll("\\.\\[]", "[]").replaceAll("^\\[]\\.", ""));
             parameter.setDescription(firstDesc);
             parameter.setType(firstType);
             parameter.setRequired(required != null && required);
-            parameters.add(parameter);
+            if(parameters.stream().map(Parameter::getName).noneMatch(e->e.equals(parameter.getName()))){
+                parameters.add(parameter);
+            }
         }
     }
 
