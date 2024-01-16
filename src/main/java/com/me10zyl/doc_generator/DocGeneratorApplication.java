@@ -49,7 +49,7 @@ public class DocGeneratorApplication implements CommandLineRunner {
     private void convertDB(ConvertType type, String... tableName){
         List<Table> tables = new ArrayList<>();
         for (String tName : tableName) {
-            Table table = dbGenerator.convertTable(DB.DB_MY, tName);
+            Table table = dbGenerator.convertTable(DB.DB_MALL, tName);
             tables.add(table);
         }
 
@@ -85,11 +85,11 @@ public class DocGeneratorApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        convertDB(ConvertType.DB_TO_WXDOC, "sys_bank_info", "health_bank_card",
-//                "health_id_auth"
-//                );
+        convertDB(ConvertType.DB_TO_WXDOC, "eq_mall_user_info_conf"
+                );
 //        convertWeixinDocToSQL();
      /*   convertApi("/api/health/interface",
+                "/api/health/userInfo",
                 "/api/health/userInfo",
                 "/api/health/listHealthMoney",
                 "/api/health/healthMoneyRecords",
@@ -103,6 +103,6 @@ public class DocGeneratorApplication implements CommandLineRunner {
                 "/api/bankCard/saveOrUpdateBankCard",
                 "/api/bankCard/deleteBankCard"
         );*/
-        convertApi("/api/health/leaveMsg");
+//        convertApi("/api/health/leaveMsg");
     }
 }
