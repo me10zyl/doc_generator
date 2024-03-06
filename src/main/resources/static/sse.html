@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Demo</title>
+</head>
+<body>
+<h1>Server-Sent Events (SSE) Demo</h1>
+<ul id="messages"></ul>
+
+<script>
+    const evtSource = new EventSource("/sseStream");
+    console.log('eventSource')
+    evtSource.onmessage = function(event) {
+        const newElement = document.createElement("li");
+        newElement.textContent = "message: " + event.data;
+        document.getElementById("messages").appendChild(newElement);
+    }
+</script>
+</body>
+</html>

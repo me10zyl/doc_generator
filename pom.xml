@@ -103,6 +103,52 @@
             <artifactId>jna-platform</artifactId>
             <version>5.14.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.68</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>joinpartner</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>ezmorph-1.0.2</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>icbc_2.0.0.4</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>InfosecCrypto_Java1_02_JDK14</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>json_modify</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>json_simple-1.1</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gzicbc</groupId>
+            <artifactId>json-lib-2.3-jdk15</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.kwhat</groupId>
+            <artifactId>jnativehook</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
